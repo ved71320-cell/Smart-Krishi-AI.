@@ -32,6 +32,22 @@ export default function Scanner() {
       const base64Data = image.split(",")[1];
       const analysis = await analyzePlantDisease(base64Data);
       setResult(analysis);
+
+      // Save to SQL Database via API
+      try {
+        await fetch("/api/scans", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            disease_name: analysis.diseaseName,
+            confidence: analysis.confidence,
+            image_data: image // Optional: store image as base64
+          })
+        });
+      } catch (dbErr) {
+        console.warn("Failed to save scan to history:", dbErr);
+        // We don't block the user if history saving fails, but we log it.
+      }
     } catch (err) {
       console.error(err);
       setError("Failed to analyze image. Please try again.");

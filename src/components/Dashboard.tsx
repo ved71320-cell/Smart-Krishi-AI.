@@ -1,12 +1,41 @@
-import React from "react";
-import { Scan, Sprout, TrendingUp, Mic, ArrowRight } from "lucide-react";
+import React, { useEffect, useState } from "react";
+import { Scan, Sprout, TrendingUp, Mic, ArrowRight, Loader2, AlertCircle } from "lucide-react";
 import { motion } from "motion/react";
+import { cn } from "@/src/lib/utils";
+
+interface ScanRecord {
+  id: string;
+  disease_name: string;
+  confidence: number;
+  created_at: string;
+}
 
 interface DashboardProps {
   onNavigate: (tab: string) => void;
 }
 
 export default function Dashboard({ onNavigate }: DashboardProps) {
+  const [scans, setScans] = useState<ScanRecord[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    async function fetchHistory() {
+      try {
+        const res = await fetch("/api/scans");
+        if (!res.ok) throw new Error("Failed to fetch scan history");
+        const data = await res.json();
+        setScans(data);
+      } catch (err) {
+        console.error(err);
+        setError("Could not load scan history from database.");
+      } finally {
+        setLoading(false);
+      }
+    }
+    fetchHistory();
+  }, []);
+
   const menuItems = [
     { id: "crops", label: "Crop Advice", icon: Sprout, color: "bg-[#FFF3E0] text-[#E65100]", description: "Recommended for you: Pomegranate based on current soil and weather.", type: "crop" },
     { id: "market", label: "Market Trends", icon: TrendingUp, color: "bg-[#E3F2FD] text-[#1565C0]", description: "Tomato prices are rising. Expected peak in 5 days at Lasalgaon Mandi.", type: "market" },
@@ -63,18 +92,33 @@ export default function Dashboard({ onNavigate }: DashboardProps) {
           </button>
         </div>
         
-        <div className="flex flex-col md:flex-row gap-5">
-          <div className="flex-1 border-l-4 border-[#D32F2F] pl-4 py-1">
-            <p className="text-xs text-text-muted mb-1">2 hours ago</p>
-            <p className="font-bold text-text">Tomato Late Blight Detected</p>
-            <p className="text-[13px] text-text-muted mt-1">Remedy: Apply Copper-based fungicide.</p>
+        {loading ? (
+          <div className="flex justify-center py-4">
+            <Loader2 size={24} className="animate-spin text-primary" />
           </div>
-          <div className="flex-1 border-l-4 border-[#388E3C] pl-4 py-1">
-            <p className="text-xs text-text-muted mb-1">Yesterday</p>
-            <p className="font-bold text-text">Healthy Wheat Sample</p>
-            <p className="text-[13px] text-text-muted mt-1">Status: Nitrogen levels optimal.</p>
+        ) : error ? (
+          <div className="flex items-center gap-2 text-red-500 text-sm py-2">
+            <AlertCircle size={16} />
+            <p>{error}</p>
           </div>
-        </div>
+        ) : scans.length === 0 ? (
+          <p className="text-sm text-text-muted py-2 italic">No recent scans found in database.</p>
+        ) : (
+          <div className="flex flex-col md:flex-row gap-5">
+            {scans.slice(0, 2).map((scan) => (
+              <div key={scan.id} className={cn(
+                "flex-1 border-l-4 pl-4 py-1",
+                scan.disease_name.toLowerCase().includes("healthy") ? "border-[#388E3C]" : "border-[#D32F2F]"
+              )}>
+                <p className="text-xs text-text-muted mb-1">
+                  {new Date(scan.created_at).toLocaleDateString()} at {new Date(scan.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                </p>
+                <p className="font-bold text-text">{scan.disease_name}</p>
+                <p className="text-[13px] text-text-muted mt-1">Confidence: {Math.round(scan.confidence * 100)}%</p>
+              </div>
+            ))}
+          </div>
+        )}
       </section>
     </div>
   );

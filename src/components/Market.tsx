@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { TrendingUp, TrendingDown, Minus, MapPin, Search, Loader2 } from "lucide-react";
 import { motion } from "motion/react";
+import { cn } from "@/src/lib/utils";
 
 interface MarketPrice {
-  id: number;
+  id: string;
   crop: string;
   price: string;
   trend: "up" | "down" | "stable";
@@ -109,8 +110,4 @@ export default function Market() {
       )}
     </div>
   );
-}
-
-function cn(...inputs: any[]) {
-  return inputs.filter(Boolean).join(" ");
 }

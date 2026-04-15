@@ -1,10 +1,4 @@
-My AI Project
 
-This project is built using modern AI tools and demonstrates:
-
-Core functionality of the application
-Clean structure and modular code
-Practical implementation of AI features
 
 ## Run Locally
 

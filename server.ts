@@ -3,8 +3,8 @@ import { createServer as createViteServer } from "vite";
 import path from "path";
 import { fileURLToPath } from "url";
 import dotenv from "dotenv";
-import { MarketService } from "./src/server/services/MarketService.js";
-import { ScanService } from "./src/server/services/ScanService.js";
+import { MarketService } from "./src/server/services/MarketService.ts";
+import { ScanService } from "./src/server/services/ScanService.ts";
 
 dotenv.config();
 

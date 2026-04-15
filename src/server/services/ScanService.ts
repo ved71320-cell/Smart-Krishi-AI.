@@ -1,4 +1,4 @@
-import db from '../database.js';
+import db from '../database.ts';
 import { v4 as uuidv4 } from 'uuid';
 
 export interface ScanRecord {

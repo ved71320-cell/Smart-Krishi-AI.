@@ -1,0 +1,12 @@
+{
+  "name": "Smart Krishi AI",
+  "description": "An AI-powered mobile assistant for farmers and gardeners featuring plant disease detection, crop recommendations, and a voice assistant.",
+  "requestFramePermissions": [
+    "camera",
+    "microphone"
+  ],
+  "majorCapabilities": [
+    "vision",
+    "voice"
+  ]
+}

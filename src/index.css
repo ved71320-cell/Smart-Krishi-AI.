@@ -1,0 +1,41 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Helvetica Neue", Arial, sans-serif;
+  --color-primary: #2E7D32;
+  --color-primary-light: #4CAF50;
+  --color-accent: #FF8F00;
+  --color-bg: #F1F8E9;
+  --color-surface: #FFFFFF;
+  --color-text: #1B2118;
+  --color-text-muted: #616161;
+  --color-border: #E0E0E0;
+  --shadow-polish: 0 4px 12px rgba(0,0,0,0.08);
+}
+
+@layer base {
+  body {
+    @apply bg-bg text-text font-sans;
+  }
+}
+
+.mobile-container {
+  @apply max-w-5xl mx-auto min-h-screen bg-bg relative flex flex-col md:flex-row;
+}
+
+.main-content-area {
+  @apply flex-1 flex flex-col min-h-screen;
+}
+
+.card-polish {
+  @apply bg-surface p-6 rounded-[20px] border border-border shadow-polish transition-all hover:border-primary;
+}
+
+.hero-polish {
+  @apply bg-linear-to-br from-primary to-[#1B5E20] rounded-[24px] p-10 text-white shadow-polish;
+}
+
+.btn-polish {
+  @apply bg-surface text-primary px-8 py-4 rounded-xl font-bold text-lg inline-flex items-center gap-2 transition-transform active:scale-95;
+}
